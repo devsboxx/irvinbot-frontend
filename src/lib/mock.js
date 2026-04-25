@@ -69,12 +69,14 @@ function saveMessages(sessionId, msgs) {
   save(KEY.msgs(sessionId), msgs)
 }
 
-export async function mockStreamMessage(sessionId, text, onChunk) {
+export async function mockStreamMessage(sessionId, text, files = [], onChunk) {
   const existing = mockGetMessages(sessionId)
-  const userMsg = { id: crypto.randomUUID(), role: 'user', content: text }
+  // Save to localStorage without dataUrls (keep storage small)
+  const safeAttachments = files.map(({ dataUrl: _, ...rest }) => rest)
+  const userMsg = { id: crypto.randomUUID(), role: 'user', content: text, attachments: safeAttachments }
   saveMessages(sessionId, [...existing, userMsg])
 
-  const response = generateResponse(text)
+  const response = files.length > 0 ? generateFileResponse(files, text) : generateResponse(text)
 
   // Simulate initial thinking latency
   await new Promise(r => setTimeout(r, 400 + Math.random() * 400))
@@ -290,4 +292,96 @@ function generateResponse(text) {
     if (r.keys.some(k => lower.includes(k))) return r.text
   }
   return DEFAULT[Math.floor(Math.random() * DEFAULT.length)]
+}
+
+// ─── File-aware response generation ──────────────────────────────────────────
+function generateFileResponse(files, text) {
+  const hasImage = files.some(f => f.type.startsWith('image/'))
+  const hasPdf = files.some(f => f.type === 'application/pdf')
+  const hasText = files.some(f => f.type.startsWith('text/') || f.name.endsWith('.csv') || f.name.endsWith('.md'))
+  const hasDoc = files.some(f => f.name.match(/\.(docx?)$/i) || f.type.includes('word'))
+  const hasSheet = files.some(f => f.name.match(/\.(xlsx?)$/i) || f.type.includes('excel') || f.type.includes('spreadsheet'))
+  const names = files.map(f => `"${f.name}"`).join(', ')
+
+  if (hasImage) {
+    return `He recibido ${files.length > 1 ? 'las imágenes' : 'la imagen'} que compartiste.
+
+**Lo que puedo analizar:**
+Puedo ayudarte a interpretar figuras, gráficas, diagramas conceptuales, esquemas metodológicos o cualquier elemento visual relacionado con tu tesis.
+
+Para darte un análisis más preciso, cuéntame:
+- ¿Es una figura de resultados, un diagrama de flujo o un marco conceptual?
+- ¿Qué aspecto necesitas analizar o mejorar?
+- ¿Forma parte de algún capítulo específico de tu tesis?
+
+Si la imagen contiene texto, tablas o gráficos estadísticos, puedo ayudarte a interpretarlos en el contexto de tu investigación.`
+  }
+
+  if (hasPdf) {
+    return `He recibido el archivo PDF ${names}.
+
+**Lo que puedo hacer con este documento:**
+- Revisar la estructura y organización del contenido
+- Analizar la coherencia metodológica
+- Evaluar el uso de citas y referencias bibliográficas
+- Sugerir mejoras en la redacción académica
+- Identificar posibles vacíos o inconsistencias
+
+Para comenzar el análisis, dime:
+- ¿Qué parte del documento quieres revisar? (introducción, marco teórico, metodología, resultados)
+- ¿Cuál es el objetivo principal de este documento?
+- ¿Tienes alguna preocupación específica sobre su contenido?`
+  }
+
+  if (hasDoc) {
+    return `He recibido el documento ${names}.
+
+Puedo ayudarte a revisar y mejorar este documento. Para un análisis efectivo, indícame:
+
+- ¿Es un capítulo de tu tesis, un anteproyecto o un artículo académico?
+- ¿Quieres que me enfoque en la redacción, la estructura o el contenido?
+- ¿Hay alguna sección específica que te preocupe?
+
+También puedo ayudarte con:
+- **Coherencia argumental** entre secciones
+- **Formato de citas** según APA 7
+- **Claridad y precisión** del lenguaje académico`
+  }
+
+  if (hasSheet) {
+    return `He recibido el archivo de datos ${names}.
+
+Puedo ayudarte a trabajar con estos datos en el contexto de tu investigación:
+
+**Análisis descriptivo**
+Media, mediana, desviación estándar, frecuencias.
+
+**Interpretación de resultados**
+Cómo presentar y discutir los hallazgos en tu tesis.
+
+**Visualización**
+Qué tipo de gráficas son apropiadas según tus variables.
+
+**Estadística inferencial**
+Qué pruebas aplicar según tu diseño de investigación (correlaciones, t-test, ANOVA, regresión).
+
+¿Qué tipo de análisis necesitas realizar con estos datos?`
+  }
+
+  if (hasText) {
+    return `He recibido el archivo de texto ${names}.
+
+Puedo analizar el contenido y ayudarte con:
+- Estructura y organización del texto
+- Identificación de categorías o patrones (útil para análisis cualitativo)
+- Revisión de redacción académica
+- Extracción de información relevante para tu marco teórico
+
+¿Qué necesitas hacer con este archivo?`
+  }
+
+  // Mixed files
+  return `He recibido ${files.length} archivo${files.length > 1 ? 's' : ''}: ${names}.
+
+Puedo analizar el contenido y ayudarte en el contexto de tu investigación. ¿Qué aspecto necesitas revisar o desarrollar?`
 }

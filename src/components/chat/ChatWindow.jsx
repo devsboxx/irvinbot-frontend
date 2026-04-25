@@ -69,7 +69,7 @@ export default function ChatWindow({ messages, streamingContent, isStreaming, lo
     <div className="flex flex-1 flex-col overflow-y-auto">
       <div className="mx-auto w-full max-w-3xl px-4 py-8 flex flex-col gap-6">
         {messages.map(m => (
-          <MessageBubble key={m.id} role={m.role} content={m.content} />
+          <MessageBubble key={m.id} role={m.role} content={m.content} attachments={m.attachments} />
         ))}
         {isStreaming && streamingContent !== null && (
           <MessageBubble role="assistant" content={streamingContent} streaming />

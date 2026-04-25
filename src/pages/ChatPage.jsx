@@ -48,7 +48,7 @@ export default function ChatPage() {
     }
   }, [activeSessionId])
 
-  const handleSend = useCallback(async (text) => {
+  const handleSend = useCallback(async (text, files = []) => {
     if (isStreaming) return
 
     let sessionId = activeSessionId
@@ -62,14 +62,15 @@ export default function ChatPage() {
 
     const isFirstMessage = mockGetMessages(sessionId).length === 0
 
-    const userMsg = { id: `u_${Date.now()}`, role: 'user', content: text }
+    // Keep dataUrls in React state for image previews; they won't be persisted to localStorage
+    const userMsg = { id: `u_${Date.now()}`, role: 'user', content: text, attachments: files }
     setMessages(prev => [...prev, userMsg])
     setIsStreaming(true)
     setStreamingContent('')
 
     try {
       let collected = ''
-      await mockStreamMessage(sessionId, text, chunk => {
+      await mockStreamMessage(sessionId, text, files, chunk => {
         collected = chunk
         setStreamingContent(chunk)
       })

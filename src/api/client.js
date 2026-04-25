@@ -1,22 +1,63 @@
 const BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:8000/api'
 
-function getToken() {
-  return localStorage.getItem('access_token')
+// AuthContext registers its logout function here so the client can call it on session expiry
+let _onLogout = null
+export function setLogoutHandler(fn) {
+  _onLogout = fn
 }
 
-async function request(path, options = {}) {
-  const token = getToken()
+function getTokens() {
+  return {
+    access: localStorage.getItem('access_token'),
+    refresh: localStorage.getItem('refresh_token'),
+  }
+}
+
+function storeTokens(access, refresh) {
+  localStorage.setItem('access_token', access)
+  if (refresh) localStorage.setItem('refresh_token', refresh)
+}
+
+// Inline refresh — avoids circular import with auth.js
+async function tryRefresh() {
+  const { refresh } = getTokens()
+  if (!refresh) return false
+  try {
+    const res = await fetch(`${BASE_URL}/auth/refresh`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ refresh_token: refresh }),
+    })
+    if (!res.ok) return false
+    const data = await res.json()
+    storeTokens(data.access_token, data.refresh_token)
+    return true
+  } catch {
+    return false
+  }
+}
+
+async function request(path, options = {}, _retry = true) {
+  const { access } = getTokens()
   const headers = {
     'Content-Type': 'application/json',
-    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    ...(access ? { Authorization: `Bearer ${access}` } : {}),
     ...options.headers,
   }
 
   const res = await fetch(`${BASE_URL}${path}`, { ...options, headers })
 
+  // 401 → try to silently refresh and replay once
+  if (res.status === 401 && _retry) {
+    const refreshed = await tryRefresh()
+    if (refreshed) return request(path, options, false)
+    _onLogout?.()
+    throw Object.assign(new Error('Sesión expirada. Por favor inicia sesión de nuevo.'), { status: 401 })
+  }
+
   if (!res.ok) {
     const error = await res.json().catch(() => ({ detail: res.statusText }))
-    throw Object.assign(new Error(error.detail ?? 'Request failed'), { status: res.status })
+    throw Object.assign(new Error(error.detail ?? 'Error en la solicitud'), { status: res.status })
   }
 
   if (res.status === 204) return null
@@ -24,19 +65,19 @@ async function request(path, options = {}) {
 }
 
 export async function streamRequest(path, body, onChunk) {
-  const token = getToken()
+  const { access } = getTokens()
   const res = await fetch(`${BASE_URL}${path}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...(access ? { Authorization: `Bearer ${access}` } : {}),
     },
     body: JSON.stringify(body),
   })
 
   if (!res.ok) {
     const error = await res.json().catch(() => ({ detail: res.statusText }))
-    throw Object.assign(new Error(error.detail ?? 'Stream failed'), { status: res.status })
+    throw Object.assign(new Error(error.detail ?? 'Stream fallido'), { status: res.status })
   }
 
   const reader = res.body.getReader()
@@ -60,11 +101,8 @@ export async function streamRequest(path, body, onChunk) {
 export default {
   get: (path) => request(path),
   post: (path, body) => request(path, { method: 'POST', body: JSON.stringify(body) }),
+  put: (path, body) => request(path, { method: 'PUT', body: JSON.stringify(body) }),
   delete: (path) => request(path, { method: 'DELETE' }),
   postForm: (path, formData) =>
-    request(path, {
-      method: 'POST',
-      body: formData,
-      headers: {},
-    }),
+    request(path, { method: 'POST', body: formData, headers: {} }),
 }

@@ -1,41 +1,30 @@
-import { createContext, useContext, useState, useEffect } from 'react'
-import { getMe } from '../api/auth'
+import { createContext, useContext, useState } from 'react'
+import { mockGetCurrentUser, mockLogin, mockLogout, mockRegister } from '../lib/mock'
 
 const AuthContext = createContext(null)
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null)
-  const [loading, setLoading] = useState(true)
+  const [user, setUser] = useState(() => mockGetCurrentUser())
 
-  useEffect(() => {
-    const token = localStorage.getItem('access_token')
-    if (!token) { setLoading(false); return }
-    getMe()
-      .then(setUser)
-      .catch(() => localStorage.removeItem('access_token'))
-      .finally(() => setLoading(false))
-  }, [])
-
-  function saveTokens({ access_token, refresh_token }) {
-    localStorage.setItem('access_token', access_token)
-    if (refresh_token) localStorage.setItem('refresh_token', refresh_token)
+  function register(email, fullName, password) {
+    const me = mockRegister(email, fullName, password)
+    setUser(me)
+    return me
   }
 
-  async function login(tokens) {
-    saveTokens(tokens)
-    const me = await getMe()
+  function login(email, password) {
+    const me = mockLogin(email, password)
     setUser(me)
     return me
   }
 
   function logout() {
-    localStorage.removeItem('access_token')
-    localStorage.removeItem('refresh_token')
+    mockLogout()
     setUser(null)
   }
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout }}>
+    <AuthContext.Provider value={{ user, loading: false, register, login, logout }}>
       {children}
     </AuthContext.Provider>
   )

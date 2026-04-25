@@ -1,30 +1,48 @@
 export default function MessageBubble({ role, content, streaming = false }) {
   const isUser = role === 'user'
 
-  return (
-    <div className={`flex ${isUser ? 'justify-end' : 'justify-start'}`}>
-      {!isUser && (
-        <div className="mr-2 flex size-8 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-sm">
-          🤖
+  if (isUser) {
+    return (
+      <div className="flex justify-end animate-slide-in-right">
+        <div className="max-w-[78%] rounded-2xl rounded-tr-sm px-4 py-3 text-sm leading-relaxed text-white
+          bg-gradient-to-br from-brand to-accent shadow-lg shadow-brand/20">
+          <p className="whitespace-pre-wrap">{content}</p>
         </div>
-      )}
-      <div
-        className={`max-w-[75%] rounded-2xl px-4 py-3 text-sm leading-relaxed
-          ${isUser
-            ? 'rounded-tr-sm bg-indigo-600 text-white'
-            : 'rounded-tl-sm bg-white text-slate-800 shadow-sm ring-1 ring-slate-100'
-          }`}
-      >
-        <p className="whitespace-pre-wrap">{content}</p>
-        {streaming && (
-          <span className="ml-0.5 inline-block h-4 w-0.5 animate-pulse bg-current opacity-70" />
-        )}
       </div>
-      {isUser && (
-        <div className="ml-2 flex size-8 shrink-0 items-center justify-center rounded-full bg-slate-200 text-sm">
-          👤
-        </div>
-      )}
+    )
+  }
+
+  return (
+    <div className="flex gap-3 animate-slide-in-left">
+      <div className="mt-1 flex size-7 shrink-0 items-center justify-center rounded-full text-[10px] font-bold text-white
+        bg-gradient-to-br from-brand to-accent shadow-sm shadow-brand/30">
+        IB
+      </div>
+      <div className="flex-1 min-w-0 rounded-2xl rounded-tl-sm bg-white px-4 py-3.5 text-sm leading-relaxed text-slate-700
+        shadow-sm ring-1 ring-slate-100/80">
+        {streaming
+          ? (
+            <span className="whitespace-pre-wrap">
+              {content}
+              <span className="ml-0.5 inline-block h-4 w-0.5 animate-pulse bg-accent opacity-80 align-middle rounded-full" />
+            </span>
+          )
+          : renderContent(content)
+        }
+      </div>
     </div>
+  )
+}
+
+function renderContent(text) {
+  const parts = text.split(/(\*\*[^*\n]+\*\*)/g)
+  return (
+    <span className="whitespace-pre-wrap">
+      {parts.map((part, i) =>
+        part.startsWith('**') && part.endsWith('**')
+          ? <strong key={i} className="font-semibold text-slate-800">{part.slice(2, -2)}</strong>
+          : part
+      )}
+    </span>
   )
 }

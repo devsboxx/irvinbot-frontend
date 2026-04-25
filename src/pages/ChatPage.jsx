@@ -1,12 +1,12 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useAuth } from '../context/AuthContext'
-import {
-  mockListSessions, mockCreateSession, mockGetMessages,
-  mockDeleteSession, mockUpdateSessionTitle, mockStreamMessage,
-} from '../lib/mock'
+import { listSessions, createSession, getMessages, deleteSession, streamMessage } from '../api/chat'
+import { listDocuments } from '../api/docs'
 import SessionList from '../components/chat/SessionList'
 import ChatWindow from '../components/chat/ChatWindow'
 import MessageInput from '../components/chat/MessageInput'
+import DocumentList from '../components/docs/DocumentList'
+import UploadButton from '../components/docs/UploadButton'
 import { GradCapIcon, Wordmark } from '../components/ui/Logo'
 
 export default function ChatPage() {
@@ -19,28 +19,51 @@ export default function ChatPage() {
   const [loadingMessages, setLoadingMessages] = useState(false)
   const [isStreaming, setIsStreaming] = useState(false)
   const [streamingContent, setStreamingContent] = useState('')
+  const [documents, setDocuments] = useState([])
+  const [loadingDocs, setLoadingDocs] = useState(true)
 
   useEffect(() => {
-    setSessions(mockListSessions())
-    setLoadingSessions(false)
+    listSessions()
+      .then(setSessions)
+      .catch(() => {})
+      .finally(() => setLoadingSessions(false))
+  }, [])
+
+  useEffect(() => {
+    listDocuments()
+      .then(res => setDocuments(res.documents ?? []))
+      .catch(() => {})
+      .finally(() => setLoadingDocs(false))
   }, [])
 
   useEffect(() => {
     if (!activeSessionId) return
     setLoadingMessages(true)
-    setMessages(mockGetMessages(activeSessionId))
-    setLoadingMessages(false)
+    setMessages([])
+    getMessages(activeSessionId)
+      .then(setMessages)
+      .catch(() => {})
+      .finally(() => setLoadingMessages(false))
   }, [activeSessionId])
 
-  const handleNewSession = useCallback(() => {
-    const session = mockCreateSession()
-    setSessions(prev => [session, ...prev])
-    setActiveSessionId(session.id)
+  const handleSelectSession = useCallback((id) => {
+    setActiveSessionId(id)
     setMessages([])
   }, [])
 
-  const handleDeleteSession = useCallback((id) => {
-    mockDeleteSession(id)
+  const handleNewSession = useCallback(async () => {
+    try {
+      const session = await createSession()
+      setSessions(prev => [session, ...prev])
+      setActiveSessionId(session.id)
+      setMessages([])
+    } catch {}
+  }, [])
+
+  const handleDeleteSession = useCallback(async (id) => {
+    try {
+      await deleteSession(id)
+    } catch {}
     setSessions(prev => prev.filter(s => s.id !== id))
     if (activeSessionId === id) {
       setActiveSessionId(null)
@@ -49,20 +72,21 @@ export default function ChatPage() {
   }, [activeSessionId])
 
   const handleSend = useCallback(async (text, files = []) => {
-    if (isStreaming) return
+    if (isStreaming || !text.trim()) return
 
     let sessionId = activeSessionId
     if (!sessionId) {
-      const session = mockCreateSession()
-      setSessions(prev => [session, ...prev])
-      setActiveSessionId(session.id)
-      sessionId = session.id
-      setMessages([])
+      try {
+        const session = await createSession()
+        setSessions(prev => [session, ...prev])
+        setActiveSessionId(session.id)
+        sessionId = session.id
+        setMessages([])
+      } catch (err) {
+        return
+      }
     }
 
-    const isFirstMessage = mockGetMessages(sessionId).length === 0
-
-    // Keep dataUrls in React state for image previews; they won't be persisted to localStorage
     const userMsg = { id: `u_${Date.now()}`, role: 'user', content: text, attachments: files }
     setMessages(prev => [...prev, userMsg])
     setIsStreaming(true)
@@ -70,21 +94,26 @@ export default function ChatPage() {
 
     try {
       let collected = ''
-      await mockStreamMessage(sessionId, text, files, chunk => {
-        collected = chunk
-        setStreamingContent(chunk)
+      await streamMessage(sessionId, text, chunk => {
+        collected += chunk
+        setStreamingContent(collected)
       })
 
       const aiMsg = { id: `a_${Date.now()}`, role: 'assistant', content: collected }
       setMessages(prev => [...prev, aiMsg])
 
-      if (isFirstMessage) {
-        const newTitle = text.slice(0, 55)
-        mockUpdateSessionTitle(sessionId, newTitle)
-        setSessions(prev => prev.map(s =>
-          s.id === sessionId ? { ...s, title: newTitle } : s
-        ))
+      setSessions(prev => prev.map(s =>
+        s.id === sessionId && s.title === 'Nueva conversación'
+          ? { ...s, title: text.slice(0, 55) + (text.length > 55 ? '…' : '') }
+          : s
+      ))
+    } catch (err) {
+      const errMsg = {
+        id: `e_${Date.now()}`,
+        role: 'assistant',
+        content: `No se pudo obtener respuesta. ${err.message ?? ''}`.trim(),
       }
+      setMessages(prev => [...prev, errMsg])
     } finally {
       setIsStreaming(false)
       setStreamingContent('')
@@ -95,13 +124,20 @@ export default function ChatPage() {
     handleSend(text)
   }, [handleSend])
 
+  const handleDocUploaded = useCallback((doc) => {
+    setDocuments(prev => [doc, ...prev])
+  }, [])
+
+  const handleDocDeleted = useCallback((id) => {
+    setDocuments(prev => prev.filter(d => d.id !== id))
+  }, [])
+
   return (
     <div className="flex h-screen font-sans">
       {/* ── Sidebar ── */}
       <aside className="flex w-60 shrink-0 flex-col border-r border-white/5 relative overflow-hidden
         bg-gradient-to-b from-[#0E1029] to-[#090B1A]">
 
-        {/* Ambient glow behind logo */}
         <div className="absolute -top-10 -left-10 w-48 h-48 rounded-full bg-brand/15 blur-3xl pointer-events-none" />
         <div className="absolute top-20 right-0 w-32 h-32 rounded-full bg-accent/10 blur-2xl pointer-events-none" />
 
@@ -111,7 +147,7 @@ export default function ChatPage() {
           <Wordmark className="text-lg" />
         </div>
 
-        {/* Session list */}
+        {/* Sessions */}
         <div className="relative flex-1 min-h-0 flex flex-col overflow-hidden pt-1">
           <p className="mb-2 px-4 text-[10px] font-semibold uppercase tracking-wider text-slate-600">
             Conversaciones
@@ -120,12 +156,27 @@ export default function ChatPage() {
             <SessionList
               sessions={sessions}
               activeId={activeSessionId}
-              onSelect={id => setActiveSessionId(id)}
+              onSelect={handleSelectSession}
               onCreate={handleNewSession}
               onDelete={handleDeleteSession}
               loading={loadingSessions}
             />
           </div>
+        </div>
+
+        {/* Documents */}
+        <div className="relative border-t border-white/5 pt-3 pb-2 flex flex-col min-h-0">
+          <p className="mb-1.5 px-4 text-[10px] font-semibold uppercase tracking-wider text-slate-600">
+            Mis documentos
+          </p>
+          <div className="max-h-36 overflow-y-auto">
+            <DocumentList
+              documents={documents}
+              onDeleted={handleDocDeleted}
+              loading={loadingDocs}
+            />
+          </div>
+          <UploadButton onUploaded={handleDocUploaded} />
         </div>
 
         {/* User profile */}

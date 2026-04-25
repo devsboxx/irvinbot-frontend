@@ -3,6 +3,7 @@ import { Link, useNavigate, Navigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import Input from '../components/ui/Input'
 import { GradCapIcon, Wordmark } from '../components/ui/Logo'
+import { loginErrorMessage } from '../lib/authMessages'
 
 export default function LoginPage() {
   const { user, login } = useAuth()
@@ -23,13 +24,7 @@ export default function LoginPage() {
       await login(form.email, form.password)
       navigate('/chat')
     } catch (err) {
-      const messages = {
-        401: 'Correo electrónico o contraseña incorrectos.',
-        403: 'Tu cuenta está desactivada. Contacta al administrador.',
-        422: 'Verifica los datos ingresados.',
-        503: 'Servicio no disponible. Intenta más tarde.',
-      }
-      setError(messages[err.status] ?? err.message ?? 'Error al iniciar sesión.')
+      setError(loginErrorMessage(err))
       setLoading(false)
     }
   }

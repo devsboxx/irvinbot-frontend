@@ -3,6 +3,7 @@ import { Link, useNavigate, Navigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import Input from '../components/ui/Input'
 import { GradCapIcon, Wordmark } from '../components/ui/Logo'
+import { registerErrorMessage } from '../lib/authMessages'
 
 const FEATURES = [
   { icon: '📐', label: 'Hipótesis y variables de investigación' },
@@ -34,12 +35,7 @@ export default function RegisterPage() {
       await register(form.email, form.fullName, form.password)
       navigate('/chat')
     } catch (err) {
-      const messages = {
-        409: 'Este correo ya está registrado. ¿Quieres iniciar sesión?',
-        422: 'Verifica los datos ingresados.',
-        503: 'Servicio no disponible. Intenta más tarde.',
-      }
-      setError(messages[err.status] ?? err.message ?? 'Error al crear la cuenta.')
+      setError(registerErrorMessage(err))
       setLoading(false)
     }
   }

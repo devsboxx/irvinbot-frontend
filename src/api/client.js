@@ -1,3 +1,5 @@
+import { parseApiError } from '../lib/apiErrors'
+
 const BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:8000/api'
 
 // AuthContext registers its logout function here so the client can call it on session expiry
@@ -58,11 +60,7 @@ async function request(path, options = {}, _retry = true) {
 
   if (!res.ok) {
     const body = await res.json().catch(() => null)
-    // Pydantic 422 returns detail as an array of validation errors
-    const detail = Array.isArray(body?.detail)
-      ? body.detail.map(e => e.msg).join(', ')
-      : body?.detail
-    throw Object.assign(new Error(detail ?? res.statusText), { status: res.status })
+    throw parseApiError(body, res.status, res.statusText)
   }
 
   if (res.status === 204) return null
@@ -81,8 +79,8 @@ export async function streamRequest(path, body, onChunk) {
   })
 
   if (!res.ok) {
-    const error = await res.json().catch(() => ({ detail: res.statusText }))
-    throw Object.assign(new Error(error.detail ?? 'Stream fallido'), { status: res.status })
+    const body = await res.json().catch(() => null)
+    throw parseApiError(body, res.status, res.statusText)
   }
 
   const reader = res.body.getReader()

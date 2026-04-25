@@ -12,12 +12,29 @@ const SUGGESTIONS = [
   '¿Cómo defino mis objetivos?',
 ]
 
+function ThinkingBubble() {
+  return (
+    <div className="flex gap-3 animate-slide-in-left">
+      <div className="mt-1 flex size-7 shrink-0 items-center justify-center rounded-full text-[10px] font-bold text-white
+        bg-gradient-to-br from-brand to-accent shadow-sm shadow-brand/30">
+        IB
+      </div>
+      <div className="flex items-center gap-1.5 rounded-2xl rounded-tl-sm bg-white px-4 py-3.5
+        shadow-sm ring-1 ring-slate-100/80">
+        <span className="size-2 rounded-full bg-slate-300 animate-bounce" style={{ animationDelay: '0ms' }} />
+        <span className="size-2 rounded-full bg-slate-300 animate-bounce" style={{ animationDelay: '150ms' }} />
+        <span className="size-2 rounded-full bg-slate-300 animate-bounce" style={{ animationDelay: '300ms' }} />
+      </div>
+    </div>
+  )
+}
+
 export default function ChatWindow({ messages, streamingContent, isStreaming, loading, onSuggestion }) {
   const bottomRef = useRef(null)
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [messages, streamingContent])
+  }, [messages, streamingContent, isStreaming])
 
   if (loading) {
     return (
@@ -34,7 +51,6 @@ export default function ChatWindow({ messages, streamingContent, isStreaming, lo
         <div className="text-center animate-slide-up">
           <div className="relative inline-flex">
             <GradCapIcon className="size-16 drop-shadow-md" />
-            {/* Glow ring */}
             <div className="absolute inset-0 rounded-full bg-gradient-to-br from-brand/20 to-accent/20 blur-xl -z-10 scale-150" />
           </div>
 
@@ -65,13 +81,16 @@ export default function ChatWindow({ messages, streamingContent, isStreaming, lo
     )
   }
 
+  const isThinking = isStreaming && streamingContent === ''
+
   return (
     <div className="flex flex-1 flex-col overflow-y-auto">
       <div className="mx-auto w-full max-w-3xl px-4 py-8 flex flex-col gap-6">
         {messages.map(m => (
           <MessageBubble key={m.id} role={m.role} content={m.content} attachments={m.attachments} />
         ))}
-        {isStreaming && streamingContent !== null && (
+        {isThinking && <ThinkingBubble />}
+        {isStreaming && streamingContent !== '' && (
           <MessageBubble role="assistant" content={streamingContent} streaming />
         )}
         <div ref={bottomRef} />

@@ -34,7 +34,12 @@ export default function RegisterPage() {
       await register(form.email, form.fullName, form.password)
       navigate('/chat')
     } catch (err) {
-      setError(err.message ?? 'Error al crear la cuenta.')
+      const messages = {
+        409: 'Este correo ya está registrado. ¿Quieres iniciar sesión?',
+        422: 'Verifica los datos ingresados.',
+        503: 'Servicio no disponible. Intenta más tarde.',
+      }
+      setError(messages[err.status] ?? err.message ?? 'Error al crear la cuenta.')
       setLoading(false)
     }
   }

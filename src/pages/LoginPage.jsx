@@ -23,7 +23,13 @@ export default function LoginPage() {
       await login(form.email, form.password)
       navigate('/chat')
     } catch (err) {
-      setError(err.message ?? 'Credenciales incorrectas.')
+      const messages = {
+        401: 'Correo electrónico o contraseña incorrectos.',
+        403: 'Tu cuenta está desactivada. Contacta al administrador.',
+        422: 'Verifica los datos ingresados.',
+        503: 'Servicio no disponible. Intenta más tarde.',
+      }
+      setError(messages[err.status] ?? err.message ?? 'Error al iniciar sesión.')
       setLoading(false)
     }
   }

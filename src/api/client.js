@@ -47,17 +47,22 @@ async function request(path, options = {}, _retry = true) {
 
   const res = await fetch(`${BASE_URL}${path}`, { ...options, headers })
 
-  // 401 → try to silently refresh and replay once
-  if (res.status === 401 && _retry) {
+  // 401 refresh interceptor — skip for auth endpoints (login/register return 401 as real errors)
+  const isAuthEndpoint = path === '/auth/login' || path === '/auth/register'
+  if (res.status === 401 && _retry && !isAuthEndpoint) {
     const refreshed = await tryRefresh()
     if (refreshed) return request(path, options, false)
     _onLogout?.()
-    throw Object.assign(new Error('Sesión expirada. Por favor inicia sesión de nuevo.'), { status: 401 })
+    throw Object.assign(new Error('Tu sesión expiró. Por favor inicia sesión de nuevo.'), { status: 401 })
   }
 
   if (!res.ok) {
-    const error = await res.json().catch(() => ({ detail: res.statusText }))
-    throw Object.assign(new Error(error.detail ?? 'Error en la solicitud'), { status: res.status })
+    const body = await res.json().catch(() => null)
+    // Pydantic 422 returns detail as an array of validation errors
+    const detail = Array.isArray(body?.detail)
+      ? body.detail.map(e => e.msg).join(', ')
+      : body?.detail
+    throw Object.assign(new Error(detail ?? res.statusText), { status: res.status })
   }
 
   if (res.status === 204) return null

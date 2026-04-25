@@ -1,30 +1,53 @@
-import { createContext, useContext, useState } from 'react'
-import { mockGetCurrentUser, mockLogin, mockLogout, mockRegister } from '../lib/mock'
+import { createContext, useContext, useState, useEffect } from 'react'
+import { login as loginApi, register as registerApi, getMe } from '../api/auth'
 
 const AuthContext = createContext(null)
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(() => mockGetCurrentUser())
+  const [user, setUser] = useState(null)
+  const [loading, setLoading] = useState(true)
 
-  function register(email, fullName, password) {
-    const me = mockRegister(email, fullName, password)
+  // Rehydrate session on mount
+  useEffect(() => {
+    const token = localStorage.getItem('access_token')
+    if (!token) { setLoading(false); return }
+    getMe()
+      .then(me => setUser(me))
+      .catch(() => {
+        localStorage.removeItem('access_token')
+        localStorage.removeItem('refresh_token')
+      })
+      .finally(() => setLoading(false))
+  }, [])
+
+  async function register(email, fullName, password) {
+    // Register → auto-login to obtain tokens
+    await registerApi(email, password, fullName)
+    const tokens = await loginApi(email, password)
+    localStorage.setItem('access_token', tokens.access_token)
+    if (tokens.refresh_token) localStorage.setItem('refresh_token', tokens.refresh_token)
+    const me = await getMe()
     setUser(me)
     return me
   }
 
-  function login(email, password) {
-    const me = mockLogin(email, password)
+  async function login(email, password) {
+    const tokens = await loginApi(email, password)
+    localStorage.setItem('access_token', tokens.access_token)
+    if (tokens.refresh_token) localStorage.setItem('refresh_token', tokens.refresh_token)
+    const me = await getMe()
     setUser(me)
     return me
   }
 
   function logout() {
-    mockLogout()
+    localStorage.removeItem('access_token')
+    localStorage.removeItem('refresh_token')
     setUser(null)
   }
 
   return (
-    <AuthContext.Provider value={{ user, loading: false, register, login, logout }}>
+    <AuthContext.Provider value={{ user, loading, register, login, logout }}>
       {children}
     </AuthContext.Provider>
   )

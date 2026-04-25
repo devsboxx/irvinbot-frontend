@@ -15,15 +15,15 @@ export default function LoginPage() {
 
   const set = (key) => (e) => setForm(f => ({ ...f, [key]: e.target.value }))
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault()
     setError('')
     setLoading(true)
     try {
-      login(form.email, form.password)
+      await login(form.email, form.password)
       navigate('/chat')
     } catch (err) {
-      setError(err.message)
+      setError(err.message ?? 'Credenciales incorrectas.')
       setLoading(false)
     }
   }

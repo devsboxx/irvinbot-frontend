@@ -133,10 +133,10 @@ export default function ChatPage() {
           <div className="flex items-center gap-2.5">
             <div className="flex size-8 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white
               bg-gradient-to-br from-brand to-accent shadow-md shadow-brand/20">
-              {user?.fullName?.[0]?.toUpperCase() ?? '?'}
+              {(user?.full_name ?? user?.fullName ?? '?')[0].toUpperCase()}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="truncate text-xs font-medium text-slate-300">{user?.fullName}</p>
+              <p className="truncate text-xs font-medium text-slate-300">{user?.full_name ?? user?.fullName}</p>
               <p className="truncate text-[10px] text-slate-600">{user?.email}</p>
             </div>
             <button

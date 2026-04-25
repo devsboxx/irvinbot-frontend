@@ -22,7 +22,7 @@ export default function RegisterPage() {
 
   const set = (key) => (e) => setForm(f => ({ ...f, [key]: e.target.value }))
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault()
     if (form.password.length < 8) {
       setError('La contraseña debe tener al menos 8 caracteres.')
@@ -31,10 +31,10 @@ export default function RegisterPage() {
     setError('')
     setLoading(true)
     try {
-      register(form.email, form.fullName, form.password)
+      await register(form.email, form.fullName, form.password)
       navigate('/chat')
     } catch (err) {
-      setError(err.message)
+      setError(err.message ?? 'Error al crear la cuenta.')
       setLoading(false)
     }
   }

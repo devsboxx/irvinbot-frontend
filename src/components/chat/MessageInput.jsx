@@ -19,8 +19,9 @@ export default function MessageInput({ onSend, disabled }) {
     setText('')
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto'
-      textareaRef.current.focus()
     }
+    // Defer focus until after React finishes re-rendering from onSend state updates
+    requestAnimationFrame(() => textareaRef.current?.focus())
   }
 
   const canSend = text.trim().length > 0 && !disabled

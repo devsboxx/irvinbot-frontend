@@ -4,12 +4,12 @@ import Spinner from '../ui/Spinner'
 import { GradCapIcon } from '../ui/Logo'
 
 const SUGGESTIONS = [
-  '¿Cómo planteo mi hipótesis?',
-  'Estructura del marco teórico',
-  '¿Qué es la triangulación?',
-  'Cuantitativo vs. cualitativo',
-  'Cómo citar en APA 7',
-  '¿Cómo defino mis objetivos?',
+  'Quiero construir mi objeto de estudio',
+  '¿En qué consiste el Modelo de los 10 Pasos?',
+  'Ayúdame a definir mis coordenadas espacio-temporales',
+  '¿Cómo identifico los hechos de mi investigación?',
+  '¿Cuál es la diferencia entre síntomas y causas?',
+  'Quiero formular mis preguntas de investigación',
 ]
 
 function ThinkingBubble() {
@@ -55,10 +55,10 @@ export default function ChatWindow({ messages, streamingContent, isStreaming, lo
           </div>
 
           <h2 className="mt-5 text-2xl font-bold gradient-text leading-tight">
-            ¿En qué puedo ayudarte?
+            Construyamos tu objeto de estudio
           </h2>
           <p className="mt-2 text-sm text-slate-500 max-w-sm mx-auto leading-relaxed">
-            Pregúntame sobre hipótesis, metodología, citas, marco teórico y más.
+            Te guiaré paso a paso por el <strong>Modelo de los 10 Pasos</strong> para que construyas el objeto de estudio de tu tesis.
           </p>
         </div>
 
@@ -87,7 +87,7 @@ export default function ChatWindow({ messages, streamingContent, isStreaming, lo
     <div className="flex flex-1 flex-col overflow-y-auto">
       <div className="mx-auto w-full max-w-3xl px-4 py-8 flex flex-col gap-6">
         {messages.map(m => (
-          <MessageBubble key={m.id} role={m.role} content={m.content} attachments={m.attachments} />
+          <MessageBubble key={m.id} role={m.role} content={m.content} />
         ))}
         {isThinking && <ThinkingBubble />}
         {isStreaming && streamingContent !== '' && (

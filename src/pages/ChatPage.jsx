@@ -1,12 +1,9 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { listSessions, createSession, getMessages, deleteSession, streamMessage } from '../api/chat'
-import { listDocuments } from '../api/docs'
 import SessionList from '../components/chat/SessionList'
 import ChatWindow from '../components/chat/ChatWindow'
 import MessageInput from '../components/chat/MessageInput'
-import DocumentList from '../components/docs/DocumentList'
-import UploadButton from '../components/docs/UploadButton'
 import { GradCapIcon, Wordmark } from '../components/ui/Logo'
 
 export default function ChatPage() {
@@ -19,21 +16,12 @@ export default function ChatPage() {
   const [loadingMessages, setLoadingMessages] = useState(false)
   const [isStreaming, setIsStreaming] = useState(false)
   const [streamingContent, setStreamingContent] = useState('')
-  const [documents, setDocuments] = useState([])
-  const [loadingDocs, setLoadingDocs] = useState(true)
 
   useEffect(() => {
     listSessions()
       .then(setSessions)
       .catch(() => {})
       .finally(() => setLoadingSessions(false))
-  }, [])
-
-  useEffect(() => {
-    listDocuments()
-      .then(res => setDocuments(res.documents ?? []))
-      .catch(() => {})
-      .finally(() => setLoadingDocs(false))
   }, [])
 
   useEffect(() => {
@@ -71,7 +59,7 @@ export default function ChatPage() {
     }
   }, [activeSessionId])
 
-  const handleSend = useCallback(async (text, files = []) => {
+  const handleSend = useCallback(async (text) => {
     if (isStreaming || !text.trim()) return
 
     let sessionId = activeSessionId
@@ -87,7 +75,7 @@ export default function ChatPage() {
       }
     }
 
-    const userMsg = { id: `u_${Date.now()}`, role: 'user', content: text, attachments: files }
+    const userMsg = { id: `u_${Date.now()}`, role: 'user', content: text }
     setMessages(prev => [...prev, userMsg])
     setIsStreaming(true)
     setStreamingContent('')
@@ -124,14 +112,6 @@ export default function ChatPage() {
     handleSend(text)
   }, [handleSend])
 
-  const handleDocUploaded = useCallback((doc) => {
-    setDocuments(prev => [doc, ...prev])
-  }, [])
-
-  const handleDocDeleted = useCallback((id) => {
-    setDocuments(prev => prev.filter(d => d.id !== id))
-  }, [])
-
   return (
     <div className="flex h-screen font-sans">
       {/* ── Sidebar ── */}
@@ -162,21 +142,6 @@ export default function ChatPage() {
               loading={loadingSessions}
             />
           </div>
-        </div>
-
-        {/* Documents */}
-        <div className="relative border-t border-white/5 pt-3 pb-2 flex flex-col min-h-0">
-          <p className="mb-1.5 px-4 text-[10px] font-semibold uppercase tracking-wider text-slate-600">
-            Mis documentos
-          </p>
-          <div className="max-h-36 overflow-y-auto">
-            <DocumentList
-              documents={documents}
-              onDeleted={handleDocDeleted}
-              loading={loadingDocs}
-            />
-          </div>
-          <UploadButton onUploaded={handleDocUploaded} />
         </div>
 
         {/* User profile */}

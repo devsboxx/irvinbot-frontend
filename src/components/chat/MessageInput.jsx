@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react'
+import { SendHorizonal } from 'lucide-react'
 
 export default function MessageInput({ onSend, disabled }) {
   const [text, setText] = useState('')
@@ -16,7 +17,10 @@ export default function MessageInput({ onSend, disabled }) {
     if (!trimmed || disabled) return
     onSend(trimmed)
     setText('')
-    textareaRef.current?.focus()
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto'
+      textareaRef.current.focus()
+    }
   }
 
   const canSend = text.trim().length > 0 && !disabled
@@ -25,8 +29,11 @@ export default function MessageInput({ onSend, disabled }) {
     <div className="px-4 pb-5 pt-2">
       <div className="mx-auto max-w-3xl">
         <div className={`rounded-2xl border bg-white transition-all duration-200
-          shadow-md shadow-slate-200/60 hover:shadow-lg
-          ${disabled ? 'border-slate-200' : 'border-slate-200 hover:border-slate-300 focus-within:border-brand/40 focus-within:ring-2 focus-within:ring-brand/10 focus-within:shadow-lg'}`}>
+          shadow-md shadow-slate-200/60
+          ${disabled
+            ? 'border-slate-200 opacity-80'
+            : 'border-slate-200 hover:border-violet-200 focus-within:border-violet-300 focus-within:ring-2 focus-within:ring-violet-100/60 focus-within:shadow-lg focus-within:shadow-violet-100/40'
+          }`}>
 
           <div className="flex items-end gap-2 px-4 py-3">
             <textarea
@@ -51,15 +58,13 @@ export default function MessageInput({ onSend, disabled }) {
               onClick={submit}
               disabled={!canSend}
               className="mb-0.5 flex size-9 shrink-0 items-center justify-center rounded-xl text-white
-                bg-gradient-to-br from-brand to-accent
-                transition-all duration-200 shadow-md shadow-brand/25
-                hover:opacity-90 hover:shadow-lg hover:scale-105
-                active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed disabled:shadow-none disabled:scale-100"
+                btn-shimmer transition-all duration-200 shadow-md shadow-violet-200/40
+                hover:shadow-lg hover:scale-105 active:scale-95
+                disabled:opacity-30 disabled:cursor-not-allowed disabled:shadow-none disabled:scale-100
+                disabled:bg-slate-300 disabled:[background:theme(colors.slate.300)]"
               aria-label="Enviar"
             >
-              <svg className="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
-              </svg>
+              <SendHorizonal className="size-4" strokeWidth={2.2} />
             </button>
           </div>
         </div>

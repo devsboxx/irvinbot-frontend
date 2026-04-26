@@ -71,8 +71,8 @@ export default function LoginPage() {
       </div>
 
       {/* ── Right form panel ── */}
-      <div className="flex flex-1 flex-col items-center justify-center px-6 py-12
-        bg-gradient-to-br from-violet-50/60 via-white to-rose-50/40 relative">
+      <div className="flex flex-1 flex-col items-center justify-center px-4 sm:px-6 py-8 sm:py-12
+        bg-gradient-to-br from-violet-50/60 via-white to-rose-50/40 relative overflow-y-auto">
 
         <div className="absolute inset-0 opacity-[0.035] pointer-events-none"
           style={{ backgroundImage: 'radial-gradient(circle, #7C3AED 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
@@ -91,7 +91,7 @@ export default function LoginPage() {
 
             <div className="h-1 bg-gradient-to-r from-indigo-400 via-violet-500 to-pink-400" />
 
-            <div className="p-8">
+            <div className="p-6 sm:p-8">
               <div className="mb-7">
                 <h1 className="text-[22px] font-bold leading-tight gradient-text">
                   Bienvenido de nuevo

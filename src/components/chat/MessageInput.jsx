@@ -26,7 +26,7 @@ export default function MessageInput({ onSend, disabled }) {
   const canSend = text.trim().length > 0 && !disabled
 
   return (
-    <div className="px-4 pb-5 pt-2">
+    <div className="px-3 sm:px-4 pb-4 sm:pb-5 pt-2">
       <div className="mx-auto max-w-3xl">
         <div className={`rounded-2xl border bg-white transition-all duration-200
           shadow-md shadow-slate-200/60

@@ -7,7 +7,7 @@ export default function MessageBubble({ role, content, attachments = [], streami
   if (isUser) {
     return (
       <div className="flex justify-end animate-slide-in-right">
-        <div className="max-w-[80%] rounded-2xl rounded-tr-sm text-sm leading-relaxed text-white
+        <div className="max-w-[90%] sm:max-w-[80%] rounded-2xl rounded-tr-sm text-sm leading-relaxed text-white
           bg-gradient-to-br from-brand to-accent shadow-lg shadow-brand/20 overflow-hidden">
           {attachments.length > 0 && (
             <div className="flex flex-col gap-2 p-3 pb-2">

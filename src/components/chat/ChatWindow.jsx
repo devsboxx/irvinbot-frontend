@@ -46,7 +46,7 @@ export default function ChatWindow({ messages, streamingContent, isStreaming, lo
 
   if (messages.length === 0 && !isStreaming) {
     return (
-      <div className="flex flex-1 flex-col items-center justify-center gap-7 px-6 py-10">
+      <div className="flex flex-1 flex-col items-center justify-center gap-5 sm:gap-7 px-4 sm:px-6 py-8 sm:py-10">
 
         <div className="text-center animate-slide-up">
           <div className="relative inline-flex mb-5">
@@ -55,7 +55,7 @@ export default function ChatWindow({ messages, streamingContent, isStreaming, lo
               <GradCapIcon className="size-20" />
             </div>
           </div>
-          <h2 className="text-2xl font-bold gradient-text">Hola, soy IrvinBot</h2>
+          <h2 className="text-2xl font-bold gradient-text">Hola, soy Irvin</h2>
           <p className="mt-2 text-sm text-slate-500 max-w-sm mx-auto leading-relaxed">
             Te guiaré paso a paso por el{' '}
             <strong className="text-slate-700">Modelo de los 10 Pasos</strong>{' '}
@@ -63,7 +63,7 @@ export default function ChatWindow({ messages, streamingContent, isStreaming, lo
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 w-full max-w-xl">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5 w-full max-w-xl">
           {SUGGESTIONS.map(({ Icon, text }, i) => (
             <button
               key={text}
@@ -94,7 +94,7 @@ export default function ChatWindow({ messages, streamingContent, isStreaming, lo
 
   return (
     <div className="flex flex-1 flex-col overflow-y-auto">
-      <div className="mx-auto w-full max-w-3xl px-4 py-8 flex flex-col gap-5">
+      <div className="mx-auto w-full max-w-3xl px-3 sm:px-4 py-6 sm:py-8 flex flex-col gap-4 sm:gap-5">
         {messages.map(m => (
           <MessageBubble key={m.id} role={m.role} content={m.content} />
         ))}

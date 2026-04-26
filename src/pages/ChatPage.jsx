@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { listSessions, createSession, getMessages, deleteSession, streamMessage } from '../api/chat'
-import { LogOut } from 'lucide-react'
+import { LogOut, Menu, X, Plus } from 'lucide-react'
 import SessionList from '../components/chat/SessionList'
 import ChatWindow from '../components/chat/ChatWindow'
 import MessageInput from '../components/chat/MessageInput'
@@ -10,6 +10,7 @@ import { Wordmark } from '../components/ui/Logo'
 export default function ChatPage() {
   const { user, logout } = useAuth()
 
+  const [sidebarOpen, setSidebarOpen] = useState(false)
   const [sessions, setSessions] = useState([])
   const [activeSessionId, setActiveSessionId] = useState(null)
   const [messages, setMessages] = useState([])
@@ -38,6 +39,7 @@ export default function ChatPage() {
   const handleSelectSession = useCallback((id) => {
     setActiveSessionId(id)
     setMessages([])
+    setSidebarOpen(false)
   }, [])
 
   const handleNewSession = useCallback(async () => {
@@ -46,6 +48,7 @@ export default function ChatPage() {
       setSessions(prev => [session, ...prev])
       setActiveSessionId(session.id)
       setMessages([])
+      setSidebarOpen(false)
     } catch {}
   }, [])
 
@@ -71,7 +74,7 @@ export default function ChatPage() {
         setActiveSessionId(session.id)
         sessionId = session.id
         setMessages([])
-      } catch (err) {
+      } catch {
         return
       }
     }
@@ -113,20 +116,42 @@ export default function ChatPage() {
     handleSend(text)
   }, [handleSend])
 
+  const activeTitle = sessions.find(s => s.id === activeSessionId)?.title ?? 'Nueva conversación'
+
   return (
-    <div className="flex h-screen font-sans">
+    <div className="flex h-screen overflow-hidden font-sans">
+
+      {/* ── Mobile overlay ── */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 z-30 bg-black/50 md:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
       {/* ── Sidebar ── */}
-      <aside className="flex w-64 shrink-0 flex-col border-r border-white/5 relative overflow-hidden
-        bg-gradient-to-b from-[#0E1029] to-[#090B1A]">
+      <aside className={`
+        fixed inset-y-0 left-0 z-40 flex w-72 flex-col border-r border-white/5 relative overflow-hidden
+        bg-gradient-to-b from-[#0E1029] to-[#090B1A]
+        transition-transform duration-300 ease-in-out
+        md:relative md:w-64 md:translate-x-0 md:z-auto md:shrink-0
+        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+      `}>
 
         {/* Ambient glows */}
         <div className="absolute -top-10 -left-10 w-52 h-52 rounded-full bg-violet-600/20 blur-3xl pointer-events-none" />
         <div className="absolute top-1/3 right-0 w-36 h-36 rounded-full bg-pink-500/10 blur-2xl pointer-events-none" />
         <div className="absolute bottom-20 -left-8 w-40 h-40 rounded-full bg-indigo-500/15 blur-3xl pointer-events-none" />
 
-        {/* Logo */}
-        <div className="relative flex items-center px-4 pt-5 pb-4 border-b border-white/5">
+        {/* Logo row */}
+        <div className="relative flex items-center justify-between px-4 pt-5 pb-4 border-b border-white/5">
           <Wordmark className="text-lg" />
+          <button
+            onClick={() => setSidebarOpen(false)}
+            className="md:hidden text-slate-500 hover:text-slate-300 transition-colors p-1 rounded-lg hover:bg-white/5"
+          >
+            <X className="size-4" />
+          </button>
         </div>
 
         {/* Sessions */}
@@ -169,7 +194,25 @@ export default function ChatPage() {
       </aside>
 
       {/* ── Main chat area ── */}
-      <main className="flex flex-1 flex-col overflow-hidden bg-gradient-to-b from-slate-50/60 to-white">
+      <main className="flex flex-1 flex-col overflow-hidden bg-gradient-to-b from-slate-50/60 to-white min-w-0">
+
+        {/* Mobile header */}
+        <header className="md:hidden flex items-center gap-3 px-4 py-3 border-b border-slate-100 bg-white/80 backdrop-blur-sm shrink-0">
+          <button
+            onClick={() => setSidebarOpen(true)}
+            className="text-slate-500 hover:text-slate-700 transition-colors p-1.5 rounded-lg hover:bg-slate-100"
+          >
+            <Menu className="size-5" />
+          </button>
+          <p className="flex-1 truncate text-sm font-medium text-slate-700">{activeTitle}</p>
+          <button
+            onClick={handleNewSession}
+            className="text-slate-500 hover:text-violet-600 transition-colors p-1.5 rounded-lg hover:bg-violet-50"
+          >
+            <Plus className="size-5" strokeWidth={2} />
+          </button>
+        </header>
+
         <ChatWindow
           messages={messages}
           streamingContent={streamingContent}

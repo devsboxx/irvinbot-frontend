@@ -16,8 +16,8 @@ const SUGGESTIONS = [
 function ThinkingBubble() {
   return (
     <div className="flex gap-3 animate-slide-in-left">
-      <div className="mt-1 size-7 shrink-0 rounded-full overflow-hidden ring-2 ring-violet-100 shadow-sm">
-        <GradCapIcon className="size-7" />
+      <div className="mt-1 size-9 shrink-0 rounded-full overflow-hidden ring-2 ring-violet-100 shadow-sm">
+        <GradCapIcon className="size-9" />
       </div>
       <div className="flex items-center gap-1.5 rounded-2xl rounded-tl-sm bg-white px-4 py-3.5
         shadow-sm ring-1 ring-slate-100/80 border-l-2 border-violet-200/70">

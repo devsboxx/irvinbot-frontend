@@ -27,8 +27,8 @@ export default function MessageBubble({ role, content, attachments = [], streami
   return (
     <div className="flex gap-3 animate-slide-in-left">
       {/* Avatar — logo image */}
-      <div className="mt-1 size-7 shrink-0 rounded-full overflow-hidden ring-2 ring-violet-100 shadow-sm">
-        <GradCapIcon className="size-7" />
+      <div className="mt-1 size-9 shrink-0 rounded-full overflow-hidden ring-2 ring-violet-100 shadow-sm">
+        <GradCapIcon className="size-9" />
       </div>
 
       {/* Bubble */}

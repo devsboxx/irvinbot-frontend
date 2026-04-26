@@ -2,7 +2,6 @@ import { useEffect, useRef } from 'react'
 import { Target, ClipboardList, MapPin, Search, Scale, HelpCircle } from 'lucide-react'
 import MessageBubble from './MessageBubble'
 import Spinner from '../ui/Spinner'
-import { GradCapIcon } from '../ui/Logo'
 
 const SUGGESTIONS = [
   { Icon: Target,         text: 'Quiero construir mi objeto de estudio' },
@@ -15,16 +14,11 @@ const SUGGESTIONS = [
 
 function ThinkingBubble() {
   return (
-    <div className="flex gap-3 animate-slide-in-left">
-      <div className="mt-1 size-9 shrink-0 rounded-full overflow-hidden ring-2 ring-violet-100 shadow-sm">
-        <GradCapIcon className="size-9" />
-      </div>
-      <div className="flex items-center gap-1.5 rounded-2xl rounded-tl-sm bg-white px-4 py-3.5
-        shadow-sm ring-1 ring-slate-100/80 border-l-2 border-violet-200/70">
-        <span className="size-2 rounded-full bg-violet-300 animate-bounce" style={{ animationDelay: '0ms' }} />
-        <span className="size-2 rounded-full bg-pink-300 animate-bounce"   style={{ animationDelay: '160ms' }} />
-        <span className="size-2 rounded-full bg-violet-300 animate-bounce" style={{ animationDelay: '320ms' }} />
-      </div>
+    <div className="animate-slide-in-left inline-flex items-center gap-1.5 rounded-2xl bg-white px-4 py-3.5
+      shadow-sm ring-1 ring-slate-100/80 border-l-2 border-violet-200/70">
+      <span className="size-2 rounded-full bg-violet-300 animate-bounce" style={{ animationDelay: '0ms' }} />
+      <span className="size-2 rounded-full bg-pink-300 animate-bounce"   style={{ animationDelay: '160ms' }} />
+      <span className="size-2 rounded-full bg-violet-300 animate-bounce" style={{ animationDelay: '320ms' }} />
     </div>
   )
 }
@@ -93,7 +87,7 @@ export default function ChatWindow({ messages, streamingContent, isStreaming, lo
   const isThinking = isStreaming && streamingContent === ''
 
   return (
-    <div className="flex flex-1 flex-col overflow-y-auto">
+    <div className="flex flex-1 flex-col overflow-y-auto overscroll-contain">
       <div className="mx-auto w-full max-w-3xl px-3 sm:px-4 py-6 sm:py-8 flex flex-col gap-4 sm:gap-5">
         {messages.map(m => (
           <MessageBubble key={m.id} role={m.role} content={m.content} />

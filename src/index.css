@@ -75,3 +75,11 @@
   border-color: #7C3AED;
   box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
 }
+
+/* ── iOS fixes ─────────────────────────────────────────────────────────────── */
+/* Prevent iOS Safari from zooming into inputs with font-size < 16px */
+@supports (-webkit-touch-callout: none) {
+  input, textarea, select {
+    font-size: 16px !important;
+  }
+}

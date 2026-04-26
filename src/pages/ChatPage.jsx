@@ -119,7 +119,7 @@ export default function ChatPage() {
   const activeTitle = sessions.find(s => s.id === activeSessionId)?.title ?? 'Nueva conversación'
 
   return (
-    <div className="flex h-screen overflow-hidden font-sans">
+    <div className="flex h-dvh overflow-hidden font-sans">
 
       {/* ── Mobile overlay ── */}
       {sidebarOpen && (
@@ -131,7 +131,7 @@ export default function ChatPage() {
 
       {/* ── Sidebar ── */}
       <aside className={`
-        fixed inset-y-0 left-0 z-40 flex w-72 flex-col border-r border-white/5 relative overflow-hidden
+        fixed inset-y-0 left-0 z-40 flex w-72 flex-col border-r border-white/5 overflow-hidden
         bg-gradient-to-b from-[#0E1029] to-[#090B1A]
         transition-transform duration-300 ease-in-out
         md:relative md:w-64 md:translate-x-0 md:z-auto md:shrink-0

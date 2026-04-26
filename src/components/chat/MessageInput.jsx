@@ -1,9 +1,13 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { SendHorizonal } from 'lucide-react'
 
 export default function MessageInput({ onSend, disabled }) {
   const [text, setText] = useState('')
   const textareaRef = useRef(null)
+
+  useEffect(() => {
+    if (!disabled) textareaRef.current?.focus()
+  }, [disabled])
 
   function handleKeyDown(e) {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -27,7 +31,10 @@ export default function MessageInput({ onSend, disabled }) {
   const canSend = text.trim().length > 0 && !disabled
 
   return (
-    <div className="px-3 sm:px-4 pb-4 sm:pb-5 pt-2">
+    <div
+      className="px-3 sm:px-4 pt-2"
+      style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}
+    >
       <div className="mx-auto max-w-3xl">
         <div className={`rounded-2xl border bg-white transition-all duration-200
           shadow-md shadow-slate-200/60

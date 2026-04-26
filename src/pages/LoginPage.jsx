@@ -31,7 +31,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-dvh">
 
       {/* ── Left panel ── */}
       <div className="hidden lg:flex lg:w-[44%] relative overflow-hidden items-center justify-center

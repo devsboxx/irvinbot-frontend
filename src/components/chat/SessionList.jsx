@@ -38,8 +38,9 @@ export default function SessionList({ sessions, activeId, onSelect, onCreate, on
             <span className="flex-1 truncate text-xs">{s.title}</span>
             <button
               onClick={e => { e.stopPropagation(); onDelete(s.id) }}
-              className="hidden group-hover:flex size-5 items-center justify-center rounded-md
-                text-slate-600 hover:text-red-400 hover:bg-red-400/10 transition-colors"
+              className="flex size-7 sm:size-5 items-center justify-center rounded-md shrink-0
+                text-slate-500 hover:text-red-400 hover:bg-red-400/10 transition-colors
+                sm:opacity-0 sm:group-hover:opacity-100"
               aria-label="Eliminar"
             >
               <Trash2 className="size-3.5" strokeWidth={2} />

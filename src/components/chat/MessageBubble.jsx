@@ -1,4 +1,3 @@
-import { GradCapIcon } from '../ui/Logo'
 import { FileText, FileSpreadsheet, FileCode } from 'lucide-react'
 
 export default function MessageBubble({ role, content, attachments = [], streaming = false }) {
@@ -25,26 +24,18 @@ export default function MessageBubble({ role, content, attachments = [], streami
   }
 
   return (
-    <div className="flex gap-3 animate-slide-in-left">
-      {/* Avatar — logo image */}
-      <div className="mt-1 size-9 shrink-0 rounded-full overflow-hidden ring-2 ring-violet-100 shadow-sm">
-        <GradCapIcon className="size-9" />
-      </div>
-
-      {/* Bubble */}
-      <div className="flex-1 min-w-0 rounded-2xl rounded-tl-sm overflow-hidden
-        bg-white border-l-2 border-violet-200/70
-        shadow-sm ring-1 ring-slate-100/80 px-4 py-3.5">
-        {streaming
-          ? (
-            <span className="whitespace-pre-wrap text-sm leading-relaxed text-slate-700">
-              {content}
-              <span className="ml-0.5 inline-block h-4 w-0.5 animate-pulse bg-accent opacity-80 align-middle rounded-full" />
-            </span>
-          )
-          : <div className="text-slate-700 space-y-1">{renderMarkdown(content)}</div>
-        }
-      </div>
+    <div className="animate-slide-in-left rounded-2xl overflow-hidden
+      bg-white border-l-2 border-violet-200/70
+      shadow-sm ring-1 ring-slate-100/80 px-4 py-3.5">
+      {streaming
+        ? (
+          <span className="whitespace-pre-wrap text-sm leading-relaxed text-slate-700">
+            {content}
+            <span className="ml-0.5 inline-block h-4 w-0.5 animate-pulse bg-accent opacity-80 align-middle rounded-full" />
+          </span>
+        )
+        : <div className="text-slate-700 space-y-1">{renderMarkdown(content)}</div>
+      }
     </div>
   )
 }

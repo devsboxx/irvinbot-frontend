@@ -5,7 +5,7 @@ import { LogOut } from 'lucide-react'
 import SessionList from '../components/chat/SessionList'
 import ChatWindow from '../components/chat/ChatWindow'
 import MessageInput from '../components/chat/MessageInput'
-import { GradCapIcon, Wordmark } from '../components/ui/Logo'
+import { Wordmark } from '../components/ui/Logo'
 
 export default function ChatPage() {
   const { user, logout } = useAuth()
@@ -125,8 +125,7 @@ export default function ChatPage() {
         <div className="absolute bottom-20 -left-8 w-40 h-40 rounded-full bg-indigo-500/15 blur-3xl pointer-events-none" />
 
         {/* Logo */}
-        <div className="relative flex items-center gap-2.5 px-4 pt-5 pb-4 border-b border-white/5">
-          <GradCapIcon className="size-8 drop-shadow-sm rounded-lg overflow-hidden" />
+        <div className="relative flex items-center px-4 pt-5 pb-4 border-b border-white/5">
           <Wordmark className="text-lg" />
         </div>
 

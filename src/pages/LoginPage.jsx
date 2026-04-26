@@ -81,7 +81,7 @@ export default function LoginPage() {
 
           {/* Mobile logo */}
           <div className="lg:hidden flex items-center justify-center gap-2.5 mb-8">
-            <GradCapIcon className="size-14" />
+            <GradCapIcon className="size-16" />
             <Wordmark className="text-2xl" />
           </div>
 

@@ -2,8 +2,8 @@
 
 @theme {
   --font-sans: "Inter", system-ui, sans-serif;
-  --color-brand: #1E40AF;
-  --color-accent: #7C3AED;
+  --color-brand: #7C3AED;
+  --color-accent: #EC4899;
 }
 
 * {
@@ -18,7 +18,7 @@
 }
 
 @keyframes slide-up {
-  from { opacity: 0; transform: translateY(10px); }
+  from { opacity: 0; transform: translateY(12px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
@@ -32,23 +32,46 @@
   to   { opacity: 1; transform: translateX(0); }
 }
 
-/* ── Animation utilities ───────────────────────────────────────────────────── */
-.animate-fade-in      { animation: fade-in       0.4s ease-out both; }
-.animate-slide-up     { animation: slide-up      0.38s ease-out both; }
-.animate-slide-in-right { animation: slide-in-right 0.32s ease-out both; }
-.animate-slide-in-left  { animation: slide-in-left  0.32s ease-out both; }
+@keyframes blob-drift {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%       { transform: translate(20px, -24px) scale(1.05); }
+  66%       { transform: translate(-14px, 16px) scale(0.96); }
+}
 
-/* ── Gradient text helper ──────────────────────────────────────────────────── */
+@keyframes blob-drift-slow {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50%       { transform: translate(-22px, 20px) scale(1.07); }
+}
+
+/* ── Animation utilities ───────────────────────────────────────────────────── */
+.animate-fade-in          { animation: fade-in        0.4s ease-out both; }
+.animate-slide-up         { animation: slide-up       0.4s ease-out both; }
+.animate-slide-in-right   { animation: slide-in-right 0.32s ease-out both; }
+.animate-slide-in-left    { animation: slide-in-left  0.32s ease-out both; }
+.animate-blob             { animation: blob-drift      9s ease-in-out infinite; }
+.animate-blob-slow        { animation: blob-drift-slow 13s ease-in-out infinite; }
+
+/* ── Shimmer button ────────────────────────────────────────────────────────── */
+.btn-shimmer {
+  background: linear-gradient(110deg, #6366F1 0%, #7C3AED 35%, #a855f7 55%, #EC4899 100%);
+  background-size: 200% auto;
+  transition: background-position 0.5s ease, opacity 0.15s, transform 0.1s;
+}
+.btn-shimmer:hover:not(:disabled) {
+  background-position: right center;
+}
+
+/* ── Gradient text ─────────────────────────────────────────────────────────── */
 .gradient-text {
-  background: linear-gradient(135deg, #1E40AF 0%, #7C3AED 100%);
+  background: linear-gradient(135deg, #6366F1 0%, #7C3AED 50%, #EC4899 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-/* ── Gradient border for inputs on focus ──────────────────────────────────── */
+/* ── Input focus ───────────────────────────────────────────────────────────── */
 .input-fancy:focus {
   outline: none;
-  border-color: #1E40AF;
-  box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.12);
+  border-color: #7C3AED;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
 }

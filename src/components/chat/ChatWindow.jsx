@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import { Target, ClipboardList, MapPin, Search, Scale, HelpCircle } from 'lucide-react'
 import MessageBubble from './MessageBubble'
 import Spinner from '../ui/Spinner'
+import { GradCapIcon } from '../ui/Logo'
 
 const SUGGESTIONS = [
   { Icon: Target,         text: 'Quiero construir mi objeto de estudio' },

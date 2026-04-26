@@ -64,7 +64,7 @@ export default function RegisterPage() {
         <div className="relative z-10 max-w-[280px] px-6 text-center animate-fade-in">
           <div className="relative inline-flex mb-7">
             <div className="absolute inset-0 scale-[2] blur-2xl bg-white/25 rounded-full pointer-events-none" />
-            <GradCapIcon className="size-24 relative drop-shadow-2xl" />
+            <GradCapIcon className="size-32 relative drop-shadow-2xl" />
           </div>
 
           <h2 className="text-[28px] font-bold text-white tracking-tight mb-2">IrvinBot</h2>
@@ -102,7 +102,7 @@ export default function RegisterPage() {
 
           {/* Mobile logo */}
           <div className="lg:hidden flex items-center justify-center gap-2.5 mb-8">
-            <GradCapIcon className="size-14" />
+            <GradCapIcon className="size-16" />
             <Wordmark className="text-2xl" />
           </div>
 

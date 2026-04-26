@@ -33,7 +33,7 @@ export default function RegisterPage() {
     setLoading(true)
     try {
       await register(form.email, form.fullName, form.password)
-      navigate('/chat')
+      navigate('/verify-email', { state: { email: form.email } })
     } catch (err) {
       setError(registerErrorMessage(err))
       setLoading(false)

@@ -30,13 +30,7 @@ export function AuthProvider({ children }) {
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   async function register(email, fullName, password) {
-    await registerApi(email, password, fullName)
-    const tokens = await loginApi(email, password)
-    localStorage.setItem('access_token', tokens.access_token)
-    if (tokens.refresh_token) localStorage.setItem('refresh_token', tokens.refresh_token)
-    const me = await getMe()
-    setUser(me)
-    return me
+    return await registerApi(email, password, fullName)
   }
 
   async function login(email, password) {

@@ -13,7 +13,7 @@ export default function Input({ label, error, icon: Icon, className = '', ...pro
         <input
           className={`w-full rounded-xl border py-2.5 text-sm outline-none transition-all
             border-slate-200 bg-white text-slate-900 placeholder:text-slate-400
-            focus:border-violet-400 focus:ring-2 focus:ring-violet-100
+            focus:border-[#002D4D] focus:ring-2 focus:ring-[#002D4D]/10
             disabled:bg-slate-50 disabled:text-slate-500
             ${Icon ? 'pl-10 pr-3.5' : 'px-3.5'}
             ${error ? 'border-red-400 focus:border-red-400 focus:ring-red-100' : ''}

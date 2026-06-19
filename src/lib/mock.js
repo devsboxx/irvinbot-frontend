@@ -1,9 +1,9 @@
 // ─── Storage keys ─────────────────────────────────────────────────────────────
 const KEY = {
-  USERS: 'irvinbot_users',
-  ME: 'irvinbot_me',
-  SESSIONS: 'irvinbot_sessions',
-  msgs: (id) => `irvinbot_msgs_${id}`,
+  USERS: 'polaris_users',
+  ME: 'polaris_me',
+  SESSIONS: 'polaris_sessions',
+  msgs: (id) => `polaris_msgs_${id}`,
 }
 
 function load(key) {

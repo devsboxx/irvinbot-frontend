@@ -7,7 +7,7 @@ export default function MessageBubble({ role, content, attachments = [], streami
     return (
       <div className="flex justify-end animate-slide-in-right">
         <div className="max-w-[90%] sm:max-w-[80%] rounded-2xl rounded-tr-sm text-sm leading-relaxed text-white
-          bg-gradient-to-br from-brand to-accent shadow-lg shadow-brand/20 overflow-hidden">
+          bg-gradient-to-br from-[#002D4D] to-[#005895] shadow-lg shadow-[#002D4D]/20 overflow-hidden">
           {attachments.length > 0 && (
             <div className="flex flex-col gap-2 p-3 pb-2">
               {attachments.map((att, i) =>
@@ -25,7 +25,7 @@ export default function MessageBubble({ role, content, attachments = [], streami
 
   return (
     <div className="animate-slide-in-left rounded-2xl overflow-hidden
-      bg-white border-l-2 border-violet-200/70
+      bg-white border-l-2 border-[#002D4D]/30
       shadow-sm ring-1 ring-slate-100/80 px-4 py-3.5">
       {streaming
         ? (
@@ -57,7 +57,7 @@ function renderMarkdown(text) {
       <ul key={k++} className="my-1.5 space-y-1 pl-1">
         {listBuffer.map((item, j) => (
           <li key={j} className="flex items-start gap-2 text-sm leading-relaxed">
-            <span className="mt-[7px] size-1.5 rounded-full bg-violet-400 shrink-0" />
+            <span className="mt-[7px] size-1.5 rounded-full bg-[#002D4D] shrink-0" />
             <span>{renderInline(item)}</span>
           </li>
         ))}
@@ -74,7 +74,7 @@ function renderMarkdown(text) {
         {orderedBuffer.map((item, j) => (
           <li key={j} className="flex items-start gap-2 text-sm leading-relaxed">
             <span className="mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full
-              bg-violet-100 text-[10px] font-bold text-violet-700">
+              bg-[#C5E7FF] text-[10px] font-bold text-[#002D4D]">
               {start + j}
             </span>
             <span>{renderInline(item)}</span>
@@ -130,7 +130,7 @@ function renderInline(text) {
     if (part.startsWith('*') && part.endsWith('*'))
       return <em key={i} className="italic">{part.slice(1, -1)}</em>
     if (part.startsWith('`') && part.endsWith('`'))
-      return <code key={i} className="rounded-md bg-violet-50 px-1.5 py-0.5 text-xs font-mono text-violet-700 border border-violet-100">{part.slice(1, -1)}</code>
+      return <code key={i} className="rounded-md bg-[#C5E7FF]/50 px-1.5 py-0.5 text-xs font-mono text-[#002D4D] border border-[#002D4D]/20">{part.slice(1, -1)}</code>
     return part
   })
 }

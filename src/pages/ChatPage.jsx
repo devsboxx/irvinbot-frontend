@@ -132,16 +132,16 @@ export default function ChatPage() {
       {/* ── Sidebar ── */}
       <aside className={`
         fixed inset-y-0 left-0 z-40 flex w-72 flex-col border-r border-white/5 overflow-hidden
-        bg-gradient-to-b from-[#0E1029] to-[#090B1A]
+        bg-gradient-to-b from-[#002D4D] to-[#001A33]
         transition-transform duration-300 ease-in-out
         md:relative md:w-64 md:translate-x-0 md:z-auto md:shrink-0
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
       `}>
 
         {/* Ambient glows */}
-        <div className="absolute -top-10 -left-10 w-52 h-52 rounded-full bg-violet-600/20 blur-3xl pointer-events-none" />
-        <div className="absolute top-1/3 right-0 w-36 h-36 rounded-full bg-pink-500/10 blur-2xl pointer-events-none" />
-        <div className="absolute bottom-20 -left-8 w-40 h-40 rounded-full bg-indigo-500/15 blur-3xl pointer-events-none" />
+        <div className="absolute -top-10 -left-10 w-52 h-52 rounded-full bg-[#002D4D]/20 blur-3xl pointer-events-none" />
+        <div className="absolute top-1/3 right-0 w-36 h-36 rounded-full bg-[#FBC412]/10 blur-2xl pointer-events-none" />
+        <div className="absolute bottom-20 -left-8 w-40 h-40 rounded-full bg-[#005895]/15 blur-3xl pointer-events-none" />
 
         {/* Logo row */}
         <div className="relative flex items-center justify-between px-4 pt-5 pb-4 border-b border-white/5">
@@ -207,7 +207,7 @@ export default function ChatPage() {
           <p className="flex-1 truncate text-sm font-medium text-slate-700">{activeTitle}</p>
           <button
             onClick={handleNewSession}
-            className="text-slate-500 hover:text-violet-600 transition-colors p-1.5 rounded-lg hover:bg-violet-50"
+            className="text-slate-500 hover:text-[#002D4D] transition-colors p-1.5 rounded-lg hover:bg-[#C5E7FF]/50"
           >
             <Plus className="size-5" strokeWidth={2} />
           </button>

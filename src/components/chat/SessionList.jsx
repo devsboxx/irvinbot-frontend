@@ -11,7 +11,7 @@ export default function SessionList({ sessions, activeId, onSelect, onCreate, on
           disabled={loading}
           className="group flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm transition-all duration-200
             bg-white/5 border border-white/8 text-slate-400
-            hover:bg-gradient-to-r hover:from-brand/20 hover:to-accent/10
+            hover:bg-gradient-to-r hover:from-[#002D4D]/20 hover:to-[#FBC412]/10
             hover:text-slate-200 hover:border-white/15
             disabled:opacity-40"
         >
@@ -30,7 +30,7 @@ export default function SessionList({ sessions, activeId, onSelect, onCreate, on
             onClick={() => onSelect(s.id)}
             className={`group relative flex items-center gap-2 rounded-xl px-2.5 py-2 cursor-pointer transition-all duration-150
               ${activeId === s.id
-                ? 'text-white bg-gradient-to-r from-brand/30 to-accent/10 border-l-2 border-brand/70 pl-[9px]'
+                ? 'text-white bg-gradient-to-r from-[#002D4D]/30 to-[#FBC412]/10 border-l-2 border-brand/70 pl-[9px]'
                 : 'text-slate-500 hover:bg-white/5 hover:text-slate-300 border-l-2 border-transparent'
               }`}
           >

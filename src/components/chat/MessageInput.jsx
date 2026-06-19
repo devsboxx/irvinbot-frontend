@@ -40,7 +40,7 @@ export default function MessageInput({ onSend, disabled }) {
           shadow-md shadow-slate-200/60
           ${disabled
             ? 'border-slate-200 opacity-80'
-            : 'border-slate-200 hover:border-violet-200 focus-within:border-violet-300 focus-within:ring-2 focus-within:ring-violet-100/60 focus-within:shadow-lg focus-within:shadow-violet-100/40'
+            : 'border-slate-200 hover:border-[#002D4D]/30 focus-within:border-[#002D4D] focus-within:ring-2 focus-within:ring-[#002D4D]/10 focus-within:shadow-lg focus-within:shadow-[#002D4D]/10'
           }`}>
 
           <div className="flex items-end gap-2 px-4 py-3">
@@ -66,7 +66,7 @@ export default function MessageInput({ onSend, disabled }) {
               onClick={submit}
               disabled={!canSend}
               className="mb-0.5 flex size-9 shrink-0 items-center justify-center rounded-xl text-white
-                btn-shimmer transition-all duration-200 shadow-md shadow-violet-200/40
+                btn-shimmer transition-all duration-200 shadow-md shadow-[#002D4D]/20
                 hover:shadow-lg hover:scale-105 active:scale-95
                 disabled:opacity-30 disabled:cursor-not-allowed disabled:shadow-none disabled:scale-100
                 disabled:bg-slate-300 disabled:[background:theme(colors.slate.300)]"

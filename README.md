@@ -1,6 +1,6 @@
-# irvinbot-frontend
+# polaris-frontend
 
-Aplicación web de Irvinbot. Interfaz de chat para que estudiantes universitarios interactúen con el bot de tesis, gestionen sus sesiones de conversación y suban documentos PDF para análisis. Construida con **React 19**, **Tailwind CSS v4** y **Vite 6**.
+Aplicación web de Polaris. Interfaz de chat para que estudiantes universitarios interactúen con el asistente de tesis, gestionen sus sesiones de conversación y suban documentos PDF para análisis. Construida con **React 19**, **Tailwind CSS v4** y **Vite 6**.
 
 ---
 
@@ -44,7 +44,7 @@ Para customizar el tema (colores, fuentes, etc.), usar la directiva `@theme` en 
 ```css
 @import "tailwindcss";
 @theme {
-  --color-brand: oklch(60% 0.2 260);
+  --color-brand: #002D4D;
   --font-sans: "Inter", system-ui, sans-serif;
 }
 ```
@@ -54,7 +54,7 @@ Para customizar el tema (colores, fuentes, etc.), usar la directiva `@theme` en 
 ## Estructura de archivos
 
 ```
-irvinbot-frontend/
+polaris-frontend/
 ├── index.html
 ├── vite.config.js
 ├── package.json

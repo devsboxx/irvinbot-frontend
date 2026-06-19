@@ -2,8 +2,8 @@
 
 @theme {
   --font-sans: "Inter", system-ui, sans-serif;
-  --color-brand: #7C3AED;
-  --color-accent: #EC4899;
+  --color-brand: #002D4D;
+  --color-accent: #FBC412;
 }
 
 * {
@@ -53,7 +53,7 @@
 
 /* ── Shimmer button ────────────────────────────────────────────────────────── */
 .btn-shimmer {
-  background: linear-gradient(110deg, #6366F1 0%, #7C3AED 35%, #a855f7 55%, #EC4899 100%);
+  background: linear-gradient(110deg, #001A33 0%, #002D4D 35%, #004070 55%, #005895 100%);
   background-size: 200% auto;
   transition: background-position 0.5s ease, opacity 0.15s, transform 0.1s;
 }
@@ -63,7 +63,7 @@
 
 /* ── Gradient text ─────────────────────────────────────────────────────────── */
 .gradient-text {
-  background: linear-gradient(135deg, #6366F1 0%, #7C3AED 50%, #EC4899 100%);
+  background: linear-gradient(135deg, #005895 0%, #002D4D 50%, #001A33 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -72,8 +72,8 @@
 /* ── Input focus ───────────────────────────────────────────────────────────── */
 .input-fancy:focus {
   outline: none;
-  border-color: #7C3AED;
-  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+  border-color: #002D4D;
+  box-shadow: 0 0 0 3px rgba(0, 45, 77, 0.1);
 }
 
 /* ── iOS fixes ─────────────────────────────────────────────────────────────── */

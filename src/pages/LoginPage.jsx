@@ -35,15 +35,15 @@ export default function LoginPage() {
 
       {/* ── Left panel ── */}
       <div className="hidden lg:flex lg:w-[44%] relative overflow-hidden items-center justify-center
-        bg-gradient-to-br from-violet-600 via-purple-500 to-pink-400">
+        bg-gradient-to-br from-[#002D4D] via-[#001A33] to-[#000D1A]">
 
         {/* Animated blobs */}
         <div className="animate-blob absolute -top-28 -left-28 w-[440px] h-[440px] rounded-full
-          bg-indigo-400/50 blur-[90px] pointer-events-none" />
+          bg-[#002D4D]/40 blur-[90px] pointer-events-none" />
         <div className="animate-blob-slow absolute -bottom-20 -right-16 w-[360px] h-[360px] rounded-full
-          bg-rose-300/50 blur-[80px] pointer-events-none" />
+          bg-[#FBC412]/30 blur-[80px] pointer-events-none" />
         <div className="animate-blob absolute top-1/2 left-1/4 w-[260px] h-[260px] rounded-full
-          bg-fuchsia-300/30 blur-[70px] -translate-y-1/2 pointer-events-none"
+          bg-[#005895]/30 blur-[70px] -translate-y-1/2 pointer-events-none"
           style={{ animationDelay: '3s' }} />
 
         {/* Dot texture */}
@@ -56,7 +56,7 @@ export default function LoginPage() {
             <GradCapIcon className="size-34 relative drop-shadow-2xl" />
           </div>
 
-          <h2 className="text-[28px] font-bold text-white tracking-tight mb-2">IrvinBot</h2>
+          <h2 className="text-[28px] font-bold text-white tracking-tight mb-2">Polaris</h2>
           <p className="text-white/65 text-sm leading-relaxed mb-8">
             Tu asistente académico para metodología de investigación y redacción de tesis.
           </p>
@@ -72,10 +72,10 @@ export default function LoginPage() {
 
       {/* ── Right form panel ── */}
       <div className="flex flex-1 flex-col items-center justify-center px-4 sm:px-6 py-8 sm:py-12
-        bg-gradient-to-br from-violet-50/60 via-white to-rose-50/40 relative overflow-y-auto">
+        bg-gradient-to-br from-[#C5E7FF]/40 via-white to-[#FFF8DC]/40 relative overflow-y-auto">
 
         <div className="absolute inset-0 opacity-[0.035] pointer-events-none"
-          style={{ backgroundImage: 'radial-gradient(circle, #7C3AED 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
+          style={{ backgroundImage: 'radial-gradient(circle, #002D4D 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
 
         <div className="relative w-full max-w-sm animate-slide-up">
 
@@ -87,9 +87,9 @@ export default function LoginPage() {
 
           {/* Card */}
           <div className="bg-white/90 backdrop-blur-sm rounded-3xl overflow-hidden
-            shadow-2xl shadow-violet-200/40 ring-1 ring-violet-100/70">
+            shadow-2xl shadow-[#002D4D]/20 ring-1 ring-[#C5E7FF]">
 
-            <div className="h-1 bg-gradient-to-r from-indigo-400 via-violet-500 to-pink-400" />
+            <div className="h-1 bg-gradient-to-r from-[#002D4D] via-[#001A33] to-[#000D1A]" />
 
             <div className="p-6 sm:p-8">
               <div className="mb-7">
@@ -131,7 +131,7 @@ export default function LoginPage() {
                   type="submit"
                   disabled={loading}
                   className="btn-shimmer mt-1 w-full flex items-center justify-center gap-2 rounded-xl py-3 text-sm font-semibold text-white
-                    active:scale-[0.98] shadow-lg shadow-violet-300/40
+                    active:scale-[0.98] shadow-lg shadow-[#002D4D]/30
                     disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                   {loading ? (
@@ -154,7 +154,7 @@ export default function LoginPage() {
               <p className="mt-4 text-center text-sm text-slate-500">
                 ¿No tienes cuenta?{' '}
                 <Link to="/register"
-                  className="font-semibold text-violet-600 hover:text-pink-500 transition-colors">
+                  className="font-semibold text-[#002D4D] hover:text-[#FBC412] transition-colors">
                   Regístrate gratis
                 </Link>
               </p>

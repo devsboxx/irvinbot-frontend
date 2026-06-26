@@ -83,20 +83,36 @@ export async function streamRequest(path, body, onChunk) {
     throw parseApiError(body, res.status, res.statusText)
   }
 
+  if (!res.body) throw new Error('El navegador no soportó el streaming de la respuesta.')
+
   const reader = res.body.getReader()
   const decoder = new TextDecoder()
+  let buffer = ''
 
+  // Buffer entre lecturas: un evento SSE puede llegar partido en varios chunks
+  // de red. Procesamos solo líneas completas (terminadas en \n).
   while (true) {
     const { done, value } = await reader.read()
     if (done) break
-    const text = decoder.decode(value, { stream: true })
-    for (const line of text.split('\n')) {
-      if (line.startsWith('data: ') && !line.includes('[DONE]')) {
-        try {
-          const data = JSON.parse(line.slice(6))
-          if (data.chunk) onChunk(data.chunk)
-        } catch {}
+    buffer += decoder.decode(value, { stream: true })
+
+    let nl
+    while ((nl = buffer.indexOf('\n')) !== -1) {
+      const line = buffer.slice(0, nl).trim()
+      buffer = buffer.slice(nl + 1)
+      if (!line.startsWith('data:')) continue
+
+      const payload = line.slice(5).trim()
+      if (payload === '' || payload === '[DONE]') continue
+
+      let data
+      try {
+        data = JSON.parse(payload)
+      } catch {
+        continue // línea no-JSON o incompleta, se ignora
       }
+      if (data.chunk) onChunk(data.chunk)
+      else if (data.error) throw new Error('El servidor no pudo completar la respuesta.')
     }
   }
 }

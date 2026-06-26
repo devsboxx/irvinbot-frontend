@@ -83,3 +83,18 @@
     font-size: 16px !important;
   }
 }
+
+/* ── Tesis: render de las secciones generadas (Markdown) ─────────────────────── */
+.thesis-prose { color: #334155; font-size: 0.9rem; line-height: 1.65; }
+.thesis-prose h1 { font-size: 1.05rem; font-weight: 700; text-transform: uppercase; text-align: center; color: #1e293b; margin: 0.4rem 0 0.2rem; }
+.thesis-prose h2 { font-size: 1rem; font-weight: 700; text-transform: uppercase; text-align: center; color: #1e293b; margin: 0.3rem 0 0.8rem; }
+.thesis-prose h3 { font-size: 0.95rem; font-weight: 700; color: #334155; margin: 1rem 0 0.4rem; }
+.thesis-prose h4 { font-size: 0.9rem; font-weight: 700; font-style: italic; color: #475569; margin: 0.8rem 0 0.3rem; }
+.thesis-prose p { margin: 0 0 0.6rem; text-align: justify; }
+.thesis-prose ul { list-style: disc; margin: 0 0 0.6rem 1.25rem; }
+.thesis-prose ol { list-style: decimal; margin: 0 0 0.6rem 1.25rem; }
+.thesis-prose li { margin: 0 0 0.2rem; }
+.thesis-prose blockquote { margin: 0.6rem 0; padding: 0.4rem 0.8rem; border-left: 3px solid #fbbf24; background: #fffbeb; color: #92400e; font-size: 0.85rem; border-radius: 0 0.4rem 0.4rem 0; }
+.thesis-prose code { font-family: ui-monospace, monospace; font-size: 0.82rem; background: #f1f5f9; padding: 0.05rem 0.3rem; border-radius: 0.25rem; }
+.thesis-prose hr { border: none; border-top: 1px solid #e2e8f0; margin: 0.8rem 0; }
+.thesis-prose strong { font-weight: 700; color: #1e293b; }

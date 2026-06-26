@@ -1,4 +1,5 @@
 import { FileText, FileSpreadsheet, FileCode } from 'lucide-react'
+import { stripReadyMarker } from '../../lib/thesisReady'
 
 export default function MessageBubble({ role, content, attachments = [], streaming = false }) {
   const isUser = role === 'user'
@@ -23,6 +24,9 @@ export default function MessageBubble({ role, content, attachments = [], streami
     )
   }
 
+  // Oculta el marcador interno [[TESIS_LISTA]] que el bot emite al finalizar.
+  const text = stripReadyMarker(content || '')
+
   return (
     <div className="animate-slide-in-left rounded-2xl overflow-hidden
       bg-white border-l-2 border-violet-200/70
@@ -30,11 +34,11 @@ export default function MessageBubble({ role, content, attachments = [], streami
       {streaming
         ? (
           <span className="whitespace-pre-wrap text-sm leading-relaxed text-slate-700">
-            {content}
+            {text}
             <span className="ml-0.5 inline-block h-4 w-0.5 animate-pulse bg-accent opacity-80 align-middle rounded-full" />
           </span>
         )
-        : <div className="text-slate-700 space-y-1">{renderMarkdown(content)}</div>
+        : <div className="text-slate-700 space-y-1">{renderMarkdown(text)}</div>
       }
     </div>
   )

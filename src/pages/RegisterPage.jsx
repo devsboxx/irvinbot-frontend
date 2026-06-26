@@ -67,7 +67,7 @@ export default function RegisterPage() {
             <GradCapIcon className="size-36 relative drop-shadow-2xl" />
           </div>
 
-          <h2 className="text-[28px] font-bold text-white tracking-tight mb-2">IrvinBot</h2>
+          <h2 className="text-[28px] font-bold text-white tracking-tight mb-2">Polaris</h2>
           <p className="text-white/65 text-sm leading-relaxed mb-8">
             Tu asistente académico especializado en metodología de investigación y redacción de tesis.
           </p>

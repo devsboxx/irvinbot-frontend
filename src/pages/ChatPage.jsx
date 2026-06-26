@@ -1,10 +1,12 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { listSessions, createSession, getMessages, deleteSession, streamMessage } from '../api/chat'
-import { LogOut, Menu, X, Plus } from 'lucide-react'
+import { hasReadyMarker } from '../lib/thesisReady'
+import { LogOut, Menu, X, Plus, GraduationCap } from 'lucide-react'
 import SessionList from '../components/chat/SessionList'
 import ChatWindow from '../components/chat/ChatWindow'
 import MessageInput from '../components/chat/MessageInput'
+import ThesisGenerator from '../components/thesis/ThesisGenerator'
 import { Wordmark } from '../components/ui/Logo'
 
 export default function ChatPage() {
@@ -18,6 +20,7 @@ export default function ChatPage() {
   const [loadingMessages, setLoadingMessages] = useState(false)
   const [isStreaming, setIsStreaming] = useState(false)
   const [streamingContent, setStreamingContent] = useState('')
+  const [thesisOpen, setThesisOpen] = useState(false)
 
   useEffect(() => {
     listSessions()
@@ -118,6 +121,15 @@ export default function ChatPage() {
 
   const activeTitle = sessions.find(s => s.id === activeSessionId)?.title ?? 'Nueva conversación'
 
+  // El botón "Generar tesis" se habilita solo cuando el bot marcó completos los 9 pasos.
+  const thesisReady = useMemo(
+    () => messages.some(m => m.role === 'assistant' && hasReadyMarker(m.content)),
+    [messages],
+  )
+  const thesisHint = thesisReady
+    ? 'Generar tesis'
+    : 'Completa los 9 pasos del objeto de estudio para habilitar la generación'
+
   return (
     <div className="flex h-dvh overflow-hidden font-sans">
 
@@ -206,10 +218,31 @@ export default function ChatPage() {
           </button>
           <p className="flex-1 truncate text-sm font-medium text-slate-700">{activeTitle}</p>
           <button
+            onClick={() => setThesisOpen(true)}
+            disabled={!thesisReady}
+            title={thesisHint}
+            className="text-slate-500 hover:text-violet-600 transition-colors p-1.5 rounded-lg hover:bg-violet-50 disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            <GraduationCap className="size-5" strokeWidth={1.9} />
+          </button>
+          <button
             onClick={handleNewSession}
             className="text-slate-500 hover:text-violet-600 transition-colors p-1.5 rounded-lg hover:bg-violet-50"
           >
             <Plus className="size-5" strokeWidth={2} />
+          </button>
+        </header>
+
+        {/* Desktop header */}
+        <header className="hidden md:flex items-center gap-3 px-6 py-3 border-b border-slate-100 bg-white/70 backdrop-blur-sm shrink-0">
+          <p className="flex-1 truncate text-sm font-medium text-slate-700">{activeTitle}</p>
+          <button
+            onClick={() => setThesisOpen(true)}
+            disabled={!thesisReady}
+            title={thesisHint}
+            className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-brand to-accent px-3.5 py-2 text-sm font-medium text-white shadow-sm transition-opacity hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            <GraduationCap className="size-4" strokeWidth={1.9} /> Generar tesis
           </button>
         </header>
 
@@ -222,6 +255,15 @@ export default function ChatPage() {
         />
         <MessageInput onSend={handleSend} disabled={isStreaming} />
       </main>
+
+      {/* ── Thesis generation overlay ── */}
+      {thesisOpen && activeSessionId && (
+        <ThesisGenerator
+          sessionId={activeSessionId}
+          user={user}
+          onClose={() => setThesisOpen(false)}
+        />
+      )}
     </div>
   )
 }

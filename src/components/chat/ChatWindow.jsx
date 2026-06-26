@@ -50,7 +50,7 @@ export default function ChatWindow({ messages, streamingContent, isStreaming, lo
               <GradCapIcon className="size-20" />
             </div>
           </div>
-          <h2 className="text-2xl font-bold gradient-text">Hola, soy Irvin</h2>
+          <h2 className="text-2xl font-bold gradient-text">Hola, soy Polaris</h2>
           <p className="mt-2 text-sm text-slate-500 max-w-sm mx-auto leading-relaxed">
             Te guiaré paso a paso por el{' '}
             <strong className="text-slate-700">Modelo de los 10 Pasos</strong>{' '}

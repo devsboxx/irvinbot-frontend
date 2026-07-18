@@ -221,7 +221,10 @@ export default function ChatPage() {
             onClick={() => setThesisOpen(true)}
             disabled={!thesisReady}
             title={thesisHint}
-            className="text-slate-500 hover:text-violet-600 transition-colors p-1.5 rounded-lg hover:bg-violet-50 disabled:opacity-40 disabled:cursor-not-allowed"
+            className={`relative p-1.5 rounded-lg transition-all disabled:opacity-35 disabled:cursor-not-allowed
+              ${thesisReady
+                ? 'text-white bg-gradient-to-r from-violet-500 to-pink-500 shadow-md shadow-violet-300/50 animate-pulse'
+                : 'text-slate-400 hover:text-violet-600 hover:bg-violet-50'}`}
           >
             <GraduationCap className="size-5" strokeWidth={1.9} />
           </button>
@@ -240,9 +243,19 @@ export default function ChatPage() {
             onClick={() => setThesisOpen(true)}
             disabled={!thesisReady}
             title={thesisHint}
-            className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-brand to-accent px-3.5 py-2 text-sm font-medium text-white shadow-sm transition-opacity hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed"
+            className={`relative inline-flex items-center gap-2 rounded-xl px-3.5 py-2 text-sm font-semibold transition-all disabled:cursor-not-allowed
+              ${thesisReady
+                ? 'btn-shimmer text-white shadow-lg shadow-violet-300/40 hover:scale-[1.02] active:scale-[0.98]'
+                : 'bg-slate-100 text-slate-400 disabled:opacity-100'}`}
           >
-            <GraduationCap className="size-4" strokeWidth={1.9} /> Generar tesis
+            {thesisReady && (
+              <span className="absolute -top-1 -right-1 flex size-2.5">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-pink-400 opacity-75" />
+                <span className="relative inline-flex size-2.5 rounded-full bg-pink-500" />
+              </span>
+            )}
+            <GraduationCap className="size-4" strokeWidth={1.9} />
+            {thesisReady ? '¡Generar tesis!' : 'Generar tesis'}
           </button>
         </header>
 
